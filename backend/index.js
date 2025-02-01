@@ -11,8 +11,11 @@ import { Strategy as GoogleStrategy } from "passport-google-oauth20";
 import session from "express-session";
 import mongoose from "mongoose";
 import User from "./schemas/user.js";
+import { joinGame, openGames, setIO } from "./games/index.js";
 
 const app = express();
+app.use(cors());
+
 const server = createServer(app);
 const io = new Server(server, {
 	cors: {
@@ -125,6 +128,67 @@ io.on("connection", socket => {
 	console.log("a user connected");
 });
 
+app.get("/openGames", (req, res) => {
+	res.json(openGames);
+});
+
+app.get("/joinGame/:gameId", async (req, res) => {
+	const token = req.headers.authorization.split(" ")[1];
+	const decoded = jwt.verify(token, process.env.JWT_SECRET);
+	req.user = decoded;
+
+	console.log(req.user, "is the user");
+	const gameId = req.params.gameId;
+	const game = openGames.find(game => game.id == gameId);
+	if (!game) {
+		return res.status(404).json({ message: "Game not found" });
+	}
+
+	if (game.players.length >= game.capacity) {
+		return res.status(400).json({ message: "Game is full" });
+	}
+
+	let user = await User.findOne({ id: req.user.id });
+	if (!user) {
+		user = await User.create({
+			id: req.user.user_id,
+			name: req.user.name,
+			photo: req.user.photo ?? "",
+			elo: 1000,
+		});
+	}
+
+	joinGame(gameId, {
+		id: req.user.user_id,
+		name: req.user.name,
+		photo: req.user.photo ?? "",
+		elo: user.elo,
+	});
+
+	res.json({ message: "Joined game successfully" });
+});
+
+app.get("/leaveGame/:gameId", (req, res) => {
+	const token = req.headers.authorization.split(" ")[1];
+	const decoded = jwt.verify(token, process.env.JWT_SECRET);
+	req.user = decoded;
+
+	const gameId = req.params.gameId;
+	const game = openGames.find(game => game.id == gameId);
+	if (!game) {
+		return res.status(404).json({ message: "Game not found" });
+	}
+
+	const index = game.players.findIndex(p => p.id == req.user.user_id);
+	if (index == -1) {
+		return res.status(404).json({ message: "Player not found" });
+	}
+
+	game.players.splice(index, 1);
+	res.json({ message: "Left game successfully" });
+	io.emit("openGamesUpdated", openGames);
+});
+
 mongoose
 	.connect(process.env.MONGO_URI, {
 		useNewUrlParser: true,
@@ -136,4 +200,5 @@ mongoose
 		server.listen(PORT, () => {
 			console.log(`server running at http://localhost:${PORT}`);
 		});
+		setIO(io);
 	});

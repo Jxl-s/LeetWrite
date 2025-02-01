@@ -10,8 +10,10 @@ import {
 	PuzzlePieceIcon,
 	TrophyIcon,
 } from "@heroicons/react/24/solid";
-import { usePathname } from "next/navigation";
+import { redirect, usePathname } from "next/navigation";
 import Link from "next/link";
+import { startWatcher } from "../../../stores/watcher";
+import useGameListStore from "../../../stores/gameListStore";
 
 export default function PlayLayout({ children }) {
 	const setUser = useAuthStore(state => state.setUser);
@@ -25,15 +27,41 @@ export default function PlayLayout({ children }) {
 	useEffect(() => {
 		const token = localStorage.getItem("session-token");
 		if (!token) {
-			window.location.href = "/signin";
+			redirect("/signin");
 		}
 
 		const decoded = jwtDecode(token);
 		setUser(decoded.user_id, decoded.name, decoded.photo, token);
 		setReady(true);
 
-		console.log(decoded);
+		startWatcher();
 	}, []);
+
+	const games = useGameListStore(state => state.games);
+	const userId = useAuthStore(state => state.user_id);
+	const setMyGameId = useGameListStore(state => state.setMyGameId);
+
+	useEffect(() => {
+		// Check through all the players, if i am in one of them i redirect to the appropriate page
+		let foundGame = -1;
+		for (const game of games) {
+			for (const player of game.players) {
+				if (player.id == userId) {
+					foundGame = game.id;
+					break;
+				}
+			}
+		}
+
+		setMyGameId(foundGame);
+		if (foundGame != -1 && pathname !== "/play/games/lobby") {
+			redirect("/play/games/lobby");
+		}
+
+		if (foundGame == -1 && pathname === "/play/games/lobby") {
+			redirect("/play/games");
+		}
+	}, [games]);
 
 	return (
 		<div className="flex h-full">
@@ -76,7 +104,7 @@ export default function PlayLayout({ children }) {
 					className="mx-5 flex gap-4 items-center h-10 mb-5 font-bold"
 					onClick={() => {
 						localStorage.removeItem("session-token");
-						window.location.href = "/signin";
+						redirect("/signin");
 					}}
 				>
 					<ArrowLeftEndOnRectangleIcon className="w-6 h-6" />

@@ -3,17 +3,18 @@
 import Link from "next/link";
 import Button from "@/components/Button";
 import { FaGoogle } from "react-icons/fa6";
-import { CodeBracketIcon, PencilSquareIcon } from "@heroicons/react/24/solid";
-import { useSearchParams } from "next/navigation";
-import { jwtDecode } from "jwt-decode";
+import { redirect, useSearchParams } from "next/navigation";
+import { useEffect } from "react";
 
 export default function SignIn() {
 	const searchParams = useSearchParams();
-	const token = searchParams.get("token");
-	if (token) {
-		localStorage.setItem("session-token", token);
-		window.location.href = "/play";
-	}
+	useEffect(() => {
+		const token = searchParams.get("token");
+		if (token) {
+			localStorage.setItem("session-token", token);
+			redirect("/play");
+		}
+	}, [searchParams]);
 
 	return (
 		<main className="py-8 px-12">
