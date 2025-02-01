@@ -14,11 +14,11 @@ export default function Home() {
 	//}, []);
 
 	return (
-		<main>
+		<main className="py-8 px-12">
 			<nav className="flex justify-between">
-				<div>
+				<Link href="/">
 					<h1 className="text-3xl font-bold">LeetWrite</h1>
-				</div>
+				</Link>
 				<div>
 					<Link href="/signin">
 						<Button variant="primary" className="font-bold">
