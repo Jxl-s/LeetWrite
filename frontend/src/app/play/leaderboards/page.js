@@ -59,7 +59,7 @@ export default function Leaderboards() {
 							<td>
 								<img
 									src={player.photo}
-									className="w-8 h-8 rounded-full mr-2 inline-block"
+									className="w-8 h-8 rounded-full me-4 inline-block"
 								/>
 								{player.name}
 							</td>

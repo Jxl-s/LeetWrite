@@ -143,6 +143,11 @@ io.on("connection", socket => {
 	console.log("connected");
 });
 
+// handle disconnect
+io.on("disconnect", socket => {
+	console.log("disconnected");
+});
+
 app.get("/openGames", (req, res) => {
 	res.json(openGames);
 });
