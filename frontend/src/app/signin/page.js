@@ -3,11 +3,13 @@
 import Link from "next/link";
 import Button from "@/components/Button";
 import { FaGoogle } from "react-icons/fa6";
-import { redirect, useSearchParams } from "next/navigation";
+import { redirect, usePathname, useSearchParams } from "next/navigation";
 import { useEffect } from "react";
 
 export default function SignIn() {
 	const searchParams = useSearchParams();
+	const pathname = usePathname();
+
 	useEffect(() => {
 		const token = searchParams.get("token");
 		if (token) {

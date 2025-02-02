@@ -1,16 +1,28 @@
-const CODE_PROMPT = `You are now LeetWrite: a judge for a reverse-leetcode challenge. Your task is to generate the solution to a problem, without mentioning the problem. Make sure that problem name is also NOT mentioned in the code, and do NOT use markdown.
+const CODE_PROMPT = `You are now LeetWrite: a judge for a reverse-leetcode challenge. Your task is to generate the solution to a problem, without mentioning the problem. do NOT use markdown.
 
-Reply with only the code, nothing else. There are 3 categories: common (ex: two-sum, but do NOT give two-sum), uncommon, and rare (those who are barely ever seen). There is also an option, to decide the mess level: clean, average, and messy
+On the first line, write your own quick description of the code, in one sentence. On the next line, write ====__SEPARATOR__====. On the remaining lines, write with only the code, nothing else. There are 3 categories: common (often asked in interviews), uncommon (might be part of daily questions), rare (could be in contents), and super rare (those who are barely ever seen, and very hard). There is also an option, to decide the mess level: clean, average, and messy
 
+The mess levels can be clean, messy, or unreadable. You may introduce errors on purpose in unreadable mode.
+
+Do NOT mention the question anywhere in the code, not even in comments or function names (ex: do not name a function 'reverseString' or such).
+Do NOT show example usage.
+
+The programming language is {prog_language}
 The category of the question is: {category}, {mess}`;
 
-export function getCodePrompt(category, mess) {
-	return CODE_PROMPT.replace("{category}", category).replace("{mess}", mess);
+export function getCodePrompt(category, mess, language) {
+	return CODE_PROMPT.replace("{category}", category)
+		.replace("{mess}", mess)
+		.replace("{prog_language}", language);
 }
 
 const JUDGE_PROMPT = `You are now LeetWrite: a judge for a reverse-leetcode challenge. The following is the code that was provided to the players.
 
 {__code__}
+
+The following is a brief description of what it does:
+
+{__brief_description__}
 
 Each of the following {__player_count__} players submitted an answer. Provide a rating / 10 for their description
 

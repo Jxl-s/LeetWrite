@@ -1,7 +1,8 @@
-import express from "express";
 import { config } from "dotenv";
 config();
 
+import express from "express";
+import OpenAI from "openai";
 import jwt from "jsonwebtoken";
 import { createServer } from "node:http";
 import { Server } from "socket.io";
@@ -11,10 +12,21 @@ import { Strategy as GoogleStrategy } from "passport-google-oauth20";
 import session from "express-session";
 import mongoose from "mongoose";
 import User from "./schemas/user.js";
-import { joinGame, openGames, setIO } from "./games/index.js";
+import {
+	createGame,
+	deleteGame,
+	joinGame,
+	kickPlayer,
+	openGames,
+	setAI,
+	setIO,
+	startGame,
+} from "./games/index.js";
+import bodyParser from "body-parser";
 
 const app = express();
 app.use(cors());
+app.use(bodyParser.json());
 
 const server = createServer(app);
 const io = new Server(server, {
@@ -125,7 +137,7 @@ app.get("/", (req, res) => {
 
 // Socket.IO connection
 io.on("connection", socket => {
-	console.log("a user connected");
+	console.log("connected");
 });
 
 app.get("/openGames", (req, res) => {
@@ -186,8 +198,65 @@ app.get("/leaveGame/:gameId", (req, res) => {
 
 	game.players.splice(index, 1);
 	res.json({ message: "Left game successfully" });
+	if (game.players.length === 0) {
+		deleteGame(gameId);
+	}
+
 	io.emit("openGamesUpdated", openGames);
 });
+
+app.post("/createGame", async (req, res) => {
+	const token = req.headers.authorization.split(" ")[1];
+	const decoded = jwt.verify(token, process.env.JWT_SECRET);
+	req.user = decoded;
+
+	const { rarity, cleanliness, playerLimit, language } = req.body;
+	const user = await User.findOne({ id: req.user.user_id });
+	if (!user) {
+		return res.status(400).json({ message: "User not found" });
+	}
+
+	console.log(req.body);
+	createGame({
+		host: req.user.name,
+		host_id: req.user.user_id,
+		host_picture: req.user.photo,
+		host_elo: user.elo,
+		language,
+		rarity,
+		cleanliness,
+		capacity: playerLimit,
+	});
+
+	res.json({ message: "Game created successfully" });
+});
+
+app.get("/kickPlayer/:gameId/:playerId", async (req, res) => {
+	const token = req.headers.authorization.split(" ")[1];
+	const decoded = jwt.verify(token, process.env.JWT_SECRET);
+	req.user = decoded;
+
+	const gameId = req.params.gameId;
+	const playerId = req.params.playerId;
+	kickPlayer(gameId, req.user.user_id, playerId);
+	io.emit("openGamesUpdated", openGames);
+	res.json({ message: "Player kicked successfully" });
+});
+
+app.get("/startGame/:gameId", (req, res) => {
+	const token = req.headers.authorization.split(" ")[1];
+	const decoded = jwt.verify(token, process.env.JWT_SECRET);
+	req.user = decoded;
+
+	startGame(req.params.gameId, req.user.user_id);
+	res.json({ message: "Game started successfully" });
+});
+
+setAI(
+	new OpenAI({
+		apiKey: process.env.OPENAI_API_KEY,
+	}),
+);
 
 mongoose
 	.connect(process.env.MONGO_URI, {
