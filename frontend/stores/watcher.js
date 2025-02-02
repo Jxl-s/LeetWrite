@@ -1,6 +1,7 @@
 import useGameListStore from "./gameListStore";
 import io from "socket.io-client";
 import useGameStore from "./gameStore";
+import useAuthStore from "./authStore";
 export async function startWatcher() {
 	// Fetching the games
 	const url = process.env.NEXT_PUBLIC_API_URL + "/openGames";
@@ -9,7 +10,15 @@ export async function startWatcher() {
 
 	useGameListStore.getState().setGames(gamesJson);
 
-	// Fetching ...
+	// Fetching ELO
+	const eloUrl = process.env.NEXT_PUBLIC_API_URL + "/getElo";
+	const elo = await fetch(eloUrl, {
+		headers: {
+			authorization: `Bearer ${localStorage.getItem("session-token")}`,
+		},
+	});
+	const eloJson = await elo.json();
+	useAuthStore.getState().setElo(eloJson.elo);
 	//
 
 	// Socket connection
@@ -66,7 +75,7 @@ export async function startWatcher() {
 		}
 	});
 
-	socket.on("gameJudgeResults", (gameId, results, descriptions) => {
+	socket.on("gameJudgeResults", (gameId, results, descriptions, deltas) => {
 		const myGame = useGameStore.getState().id;
 		if (myGame == gameId) {
 			// map the results to a format
@@ -85,6 +94,7 @@ export async function startWatcher() {
 
 			useGameStore.getState().setIsJudging(false);
 			useGameStore.getState().setGameResults(realResults);
+			useGameStore.getState().setDeltas(deltas);
 		}
 	});
 }

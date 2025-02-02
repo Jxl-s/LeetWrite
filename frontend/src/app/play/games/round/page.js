@@ -7,6 +7,7 @@ import Button from "@/components/Button";
 import Editor from "@monaco-editor/react";
 import {
 	ArrowLeftEndOnRectangleIcon,
+	BeakerIcon,
 	ChatBubbleBottomCenterIcon,
 	CheckBadgeIcon,
 	CloudIcon,
@@ -64,6 +65,7 @@ export default function Round() {
 	const id = useGameStore(state => state.id);
 	const players = useGameStore(state => state.players) ?? [];
 	const rarity = useGameStore(state => state.rarity);
+	const eloDeltas = useGameStore(state => state.deltas);
 
 	const [description, setDescription] = useState("");
 	const router = useRouter();
@@ -408,6 +410,52 @@ export default function Round() {
 								))}
 							</tbody>
 						</table>
+						<div className="mt-2">
+							<h1 className="text-xl font-bold">
+								<BeakerIcon className="w-4 h-4 inline-block me-2" />
+								Rating Calculations
+							</h1>
+							<table className="font-mono border-separate border-spacing-3 w-full text-left">
+								<thead>
+									<tr>
+										<th></th>
+										<th>Delta ELO</th>
+										<th>New ELO</th>
+									</tr>
+								</thead>
+								<tbody>
+									{players.map(p => (
+										<tr key={p.id}>
+											<td>
+												<img
+													src={p.picture}
+													className={
+														"w-8 h-8 rounded-full inline-block me-4"
+													}
+												/>
+												{cutText(p.name, 14)}
+											</td>
+											<td
+												className={
+													"w-1/3 " +
+													(eloDeltas[p.id][1] >= 0
+														? "text-green-400"
+														: "text-red-400")
+												}
+											>
+												{eloDeltas[p.id][1] >= 0
+													? "+ "
+													: "- "}
+												{Math.abs(eloDeltas[p.id][1])}
+											</td>
+											<td className="w-1/3">
+												{eloDeltas[p.id][0]}
+											</td>
+										</tr>
+									))}
+								</tbody>
+							</table>
+						</div>
 						<Button
 							variant="primary"
 							className="w-full font-bold text-lg flex gap-2 items-center justify-center mt-4"

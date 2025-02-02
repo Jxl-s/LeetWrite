@@ -1,3 +1,10 @@
+import {
+	commonQuestions,
+	uncommonQuestions,
+	rareQuestions,
+	superRareQuestions,
+} from "../leetcode-data.js";
+
 const CODE_PROMPT = `You are now LeetWrote: a judge for a reverse-leetcode challenge. Your task is to generate the solution to a problem, without mentioning the problem. do NOT use markdown.
 
 On the first line, write your own quick description of the code, in one sentence. On the next line, write ====__SEPARATOR__====. On the remaining lines, write with only the code, nothing else. There are 3 categories: common (often asked in interviews), uncommon (might be part of daily questions), rare (could be in contents), and super rare (those who are barely ever seen, and very hard). There is also an option, to decide the mess level: clean, average, and messy
@@ -8,12 +15,37 @@ Do NOT mention the question anywhere in the code, not even in comments or functi
 Do NOT show example usage.
 
 The programming language is {prog_language}
-The category of the question is: {category}, {mess}`;
+The category of the question is: {category}, {mess}
+The problem to put into your mind, is {leet_blob}`;
 
+function getRandomQuestion(category) {
+	if (category === "Common") {
+		return commonQuestions[
+			Math.floor(Math.random() * commonQuestions.length)
+		];
+	}
+
+	if (category === "Uncommon") {
+		return uncommonQuestions[
+			Math.floor(Math.random() * uncommonQuestions.length)
+		];
+	}
+
+	if (category === "Rare") {
+		return rareQuestions[Math.floor(Math.random() * rareQuestions.length)];
+	}
+
+	if (category === "Super Rare") {
+		return superRareQuestions[
+			Math.floor(Math.random() * superRareQuestions.length)
+		];
+	}
+}
 export function getCodePrompt(category, mess, language) {
 	return CODE_PROMPT.replace("{category}", category)
 		.replace("{mess}", mess)
-		.replace("{prog_language}", language);
+		.replace("{prog_language}", language)
+		.replace("{leet_blob}", getRandomQuestion(category));
 }
 
 const JUDGE_PROMPT = `You are now LeetWrote: a judge for a reverse-leetcode challenge. The following is the code that was provided to the players.

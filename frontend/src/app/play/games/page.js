@@ -2,6 +2,7 @@
 
 import Button from "@/components/Button";
 import {
+	ClockIcon,
 	MagnifyingGlassIcon,
 	PaperAirplaneIcon,
 	PlusCircleIcon,
@@ -67,13 +68,20 @@ export default function Games() {
 				<h2 className="text-white/50 font-semibold">
 					Quickly join a game someone else started
 				</h2>
-				<div className="grow bg-white/10 rounded-lg shadow-md mt-2">
-					<div className="p-4 flex flex-col gap-4">
-						{games.map(g => (
-							<GameListing key={g.id} id={g.id} />
-						))}
+				{(games.length > 0 && (
+					<div className="grow bg-white/10 rounded-lg shadow-md mt-2">
+						<div className="p-4 flex flex-col gap-4">
+							{games.map(g => (
+								<GameListing key={g.id} id={g.id} />
+							))}
+						</div>
 					</div>
-				</div>
+				)) || (
+					<div className="font-bold mt-6 text-lg">
+						<ClockIcon className="w-10 h-10 inline-block me-2" />
+						There are no listed games for now.
+					</div>
+				)}
 			</div>
 			<div className="h-full flex flex-col col-span-2 lg:col-span-1">
 				<h1 className="text-2xl lg:text-4xl font-bold flex gap-2 items-center">

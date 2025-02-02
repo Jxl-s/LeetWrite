@@ -43,6 +43,7 @@ export default function PlayLayout({ children }) {
 	const userId = useAuthStore(state => state.user_id);
 	const setMyGameId = useGameListStore(state => state.setMyGameId);
 	const realGameId = useGameStore(state => state.id);
+	const elo = useAuthStore(state => state.elo);
 
 	useEffect(() => {
 		if (games.length === 0 && realGameId == -1) {
@@ -102,7 +103,10 @@ export default function PlayLayout({ children }) {
 								className="w-12 h-12 rounded-full"
 							/>
 						)}
-						<p className="font-bold">{name}</p>
+						<div>
+							<p className="font-bold">{name}</p>
+							<p className="text-white/50">Rating: {elo}</p>
+						</div>
 					</div>
 					<Button
 						variant="danger"

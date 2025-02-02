@@ -350,7 +350,7 @@ export async function submitDescription(gameId, playerId, description) {
 		const deltaElos = newElos.map((elo, i) => elo - previousElos[i]);
 		const idToDelta = {};
 		for (let i = 0; i < playerOrder.length; i++) {
-			idToDelta[playerOrder[i][0].id] = deltaElos[i];
+			idToDelta[playerOrder[i][0].id] = [newElos[i], deltaElos[i]];
 		}
 
 		console.log(idToDelta);

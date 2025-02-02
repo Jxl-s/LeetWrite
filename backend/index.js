@@ -277,6 +277,19 @@ app.post("/submit/:gameId", (req, res) => {
 	res.json({ message: "Description submitted successfully" });
 });
 
+app.get("/getElo", async (req, res) => {
+	const token = req.headers.authorization.split(" ")[1];
+	const decoded = jwt.verify(token, process.env.JWT_SECRET);
+	req.user = decoded;
+
+	const user = await User.findOne({ id: req.user.user_id });
+	if (!user) {
+		return res.status(400).json({ message: "User not found" });
+	}
+
+	res.json({ elo: user.elo });
+});
+
 setAI(
 	new OpenAI({
 		apiKey: process.env.OPENAI_API_KEY,
