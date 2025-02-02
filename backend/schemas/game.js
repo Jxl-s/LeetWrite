@@ -9,6 +9,10 @@ const gameSchema = new mongoose.Schema({
 		type: Array,
 		required: true,
 	},
+	language: {
+		type: String,
+		required: true,
+	},
 	submissions: {
 		type: Array,
 		required: true,

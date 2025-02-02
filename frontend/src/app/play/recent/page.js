@@ -145,7 +145,10 @@ export default function RecentGames() {
 								Code
 							</h1>
 							<Editor
-								language="markdown"
+								language={
+									focusGame?.language?.toLowerCase() ??
+									"plaintext"
+								}
 								theme="vs-dark"
 								value={focusGame?.code ?? ""}
 								className="grow h-[200px] mt-4"

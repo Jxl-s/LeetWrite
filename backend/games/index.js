@@ -374,6 +374,7 @@ export async function submitDescription(gameId, playerId, description) {
 		await Game.create({
 			players: game.players,
 			feedback: content,
+			language: game.language,
 			submissions: game.players.map(p => p.description),
 			code: game.code,
 			cleanliness: game.cleanliness,
