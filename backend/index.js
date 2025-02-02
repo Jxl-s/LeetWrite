@@ -25,6 +25,7 @@ import {
 	updateStatus,
 } from "./games/index.js";
 import bodyParser from "body-parser";
+import Game from "./schemas/game.js";
 
 const app = express();
 app.use(cors());
@@ -284,6 +285,11 @@ app.get("/getElo", async (req, res) => {
 app.get("/top", async (req, res) => {
 	const users = await User.find().sort({ elo: -1 }).limit(10);
 	res.json(users);
+});
+
+app.get("/recentGames", async (req, res) => {
+	const games = await Game.find().sort({ date: -1 }).limit(10);
+	res.json(games);
 });
 
 setAI(

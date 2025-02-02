@@ -7,6 +7,7 @@ import useAuthStore from "../../../stores/authStore";
 import Button from "@/components/Button";
 import {
 	ArrowLeftEndOnRectangleIcon,
+	GlobeAltIcon,
 	PuzzlePieceIcon,
 	TrophyIcon,
 } from "@heroicons/react/24/solid";
@@ -93,6 +94,19 @@ export default function PlayLayout({ children }) {
 						>
 							<PuzzlePieceIcon className="w-6 h-6" />
 							Games
+						</Button>
+					</Link>
+					<Link href="/play/recent" className="w-full px-5">
+						<Button
+							variant={
+								pathname === "/play/recent"
+									? "primary"
+									: "secondary"
+							}
+							className="w-full flex gap-4 items-center font-bold h-10"
+						>
+							<GlobeAltIcon className="w-6 h-6" />
+							Recent Games
 						</Button>
 					</Link>
 					<Link href="/play/leaderboards" className="w-full px-5">

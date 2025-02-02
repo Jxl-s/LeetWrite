@@ -2,16 +2,11 @@ import mongoose from "mongoose";
 
 const gameSchema = new mongoose.Schema({
 	players: {
-		type: [
-			{
-				id: String,
-				name: String,
-				picture: String,
-				elo: Number,
-				eloDelta: Number,
-				description: String,
-			},
-		],
+		type: Array,
+		required: true,
+	},
+	submissions: {
+		type: Array,
 		required: true,
 	},
 	code: {
@@ -26,9 +21,9 @@ const gameSchema = new mongoose.Schema({
 		type: String,
 		required: true,
 	},
-	host_id: {
-		type: String,
-		required: true,
+	date: {
+		type: Date,
+		default: Date.now,
 	},
 });
 

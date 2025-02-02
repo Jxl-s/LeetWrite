@@ -370,6 +370,15 @@ export async function submitDescription(gameId, playerId, description) {
 			await userObj.save();
 		}
 
+		// Create the game entry in the DB
+		await Game.create({
+			players: game.players,
+			submissions: game.players.map(p => p.description),
+			code: game.code,
+			cleanliness: game.cleanliness,
+			rarity: game.rarity,
+		});
+
 		io?.emit(
 			"gameJudgeResults",
 			gameId,
