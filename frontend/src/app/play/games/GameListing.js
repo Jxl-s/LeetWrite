@@ -4,6 +4,7 @@ import useGameListStore from "../../../../stores/gameListStore";
 import { redirect } from "next/navigation";
 import { useEffect } from "react";
 import Language from "@/components/Language";
+import { frequencyColors, messColors } from "@/utils/colors";
 
 export default function GameListing({ id }) {
 	const games = useGameListStore(state => state.games);
@@ -38,11 +39,15 @@ export default function GameListing({ id }) {
 			<header className="flex justify-between">
 				<h2 className="font-bold">
 					Difficulty:{" "}
-					<span className="text-green-400">{thisGame.rarity}</span>
+					<span className={frequencyColors[thisGame.rarity]}>
+						{thisGame.rarity}
+					</span>
 				</h2>
 				<h2 className="font-bold">
 					Cleanliness:{" "}
-					<span className="text-red-400">{thisGame.cleanliness}</span>
+					<span className={messColors[thisGame.cleanliness]}>
+						{thisGame.cleanliness}
+					</span>
 				</h2>
 			</header>
 			<Button

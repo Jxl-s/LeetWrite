@@ -67,10 +67,10 @@ export default function Home() {
 					</p>
 				</div>
 				<div className="bg-neutral-800/50 w-full mt-4 p-4 rounded-md shadow-md flex items-center justify-center flex-col">
-					<h2 className="text-3xl font-semibold">ELO system</h2>
+					<h2 className="text-3xl font-semibold">Rating system</h2>
 					<p className="text-white/50 text-lg mt-2">
 						A ranking system to place different players in their
-						appropriate leagues.
+						appropriate leagues, using ELO.
 					</p>
 				</div>
 			</section>

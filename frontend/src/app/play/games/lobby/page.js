@@ -11,6 +11,8 @@ import {
 	PaperAirplaneIcon,
 } from "@heroicons/react/24/solid";
 import useGameStore from "../../../../../stores/gameStore";
+import { frequencyColors, messColors } from "@/utils/colors";
+import Language from "@/components/Language";
 
 export default function Lobby() {
 	const myGameId = useGameListStore(state => state.myGameId);
@@ -22,6 +24,8 @@ export default function Lobby() {
 	const goingGameID = useGameStore(state => state.id);
 	const router = useRouter();
 
+	const rarity = myGame.rarity;
+	const cleanliness = myGame.cleanliness;
 	useEffect(() => {
 		if (goingGameID != -1) {
 			router.push("/play/games/round");
@@ -36,10 +40,21 @@ export default function Lobby() {
 			</p>
 			<div
 				className={
-					"w-full bg-neutral-900 mt-2 rounded-lg shadow-md p-6 flex flex-col gap-4" +
+					"w-full bg-neutral-900 mt-2 rounded-lg shadow-md px-6 pb-4 pt-4 flex flex-col gap-4 shadow-lg " +
 					(myGameStarting ? " opacity-50" : "")
 				}
 			>
+				<h2 className="font-bold opacity-50 flex gap-4 justify-between items-center">
+					<div>
+						<Language
+							lang={myGame.language}
+							className="w-6 h-6 inline-block me-2"
+						/>
+						{myGame.language}
+					</div>
+					Capacity {myGame?.players?.length ?? 0} / {myGame.capacity}
+				</h2>
+
 				{(myGame.players ?? []).map(p => (
 					<div className="flex gap-4 items-center" key={p.id}>
 						<img
@@ -85,6 +100,24 @@ export default function Lobby() {
 						)}
 					</div>
 				))}
+				<div className="flex items-center justify-between">
+					<span className="text-white/50">
+						Frequency:{" "}
+						<span
+							className={frequencyColors[rarity] + " font-bold"}
+						>
+							{rarity}
+						</span>
+					</span>
+					<span className="text-white/50">
+						Cleanliness:{" "}
+						<span
+							className={messColors[cleanliness] + " font-bold"}
+						>
+							{cleanliness}
+						</span>
+					</span>
+				</div>
 			</div>
 			{!myGameStarting && (
 				<div className="flex gap-2">

@@ -14,7 +14,7 @@ import {
 import GameListing from "./GameListing";
 import useGameListStore from "../../../../stores/gameListStore";
 import useAuthStore from "../../../../stores/authStore";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { redirect } from "next/navigation";
 import useCreateGameStore from "../../../../stores/createGameStore";
 import { messColors, frequencyColors } from "@/utils/colors";
@@ -35,8 +35,13 @@ export default function Games() {
 	const cleanliness = useCreateGameStore(state => state.cleanliness);
 	const setCleanliness = useCreateGameStore(state => state.setCleanliness);
 	const myGameStarting = useGameListStore(state => state.myGameStarting);
+	const [createDebounce, setCreateDebounce] = useState(false);
 
 	async function handleCreateGame() {
+		if (createDebounce) return;
+		setCreateDebounce(true);
+		setTimeout(() => setCreateDebounce(false), 1000);
+
 		const url = process.env.NEXT_PUBLIC_API_URL + "/createGame";
 		const body = JSON.stringify({
 			rarity,

@@ -419,8 +419,8 @@ export default function Round() {
 								<thead>
 									<tr>
 										<th></th>
-										<th>Delta ELO</th>
-										<th>New ELO</th>
+										<th>Rating Change</th>
+										<th>New Rating</th>
 									</tr>
 								</thead>
 								<tbody>
