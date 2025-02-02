@@ -68,6 +68,9 @@ index 1. creativity / 10
 index 2. clarity / 10
 index 3. additional feedback you'd like to give
 
+You will NOT care too much about the description of the code, but rather you should focus on the DESCRIPTION OF THE PROBLEM.
+For example, don't expect the player to completely write step-by-step why the algorithm works. Imagine if was the user providing the question, and you are the one who is solving it (but you already did).
+
 You will format the output, as one line will contain ==PLAYER{num}==, and then the correctness, creativity, clarity and feedback.
 One line for each field.
 for example, assuming player 1 got 9, 4, 6, and player 2 got 1, 2, 3, then this will be the output:

@@ -162,16 +162,7 @@ app.get("/joinGame/:gameId", async (req, res) => {
 		return res.status(400).json({ message: "Game is full" });
 	}
 
-	let user = await User.findOne({ id: req.user.id });
-	if (!user) {
-		user = await User.create({
-			id: req.user.user_id,
-			name: req.user.name,
-			photo: req.user.photo ?? "",
-			elo: 1000,
-		});
-	}
-
+	let user = await User.findOne({ id: req.user.user_id });
 	joinGame(gameId, {
 		id: req.user.user_id,
 		name: req.user.name,
@@ -291,7 +282,7 @@ app.get("/getElo", async (req, res) => {
 });
 
 app.get("/top", async (req, res) => {
-	const users = await User.find().sort({ elo: -1 });
+	const users = await User.find().sort({ elo: -1 }).limit(10);
 	res.json(users);
 });
 
