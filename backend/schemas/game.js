@@ -5,6 +5,10 @@ const gameSchema = new mongoose.Schema({
 		type: Array,
 		required: true,
 	},
+	feedback: {
+		type: Array,
+		required: true,
+	},
 	submissions: {
 		type: Array,
 		required: true,

@@ -373,6 +373,7 @@ export async function submitDescription(gameId, playerId, description) {
 		// Create the game entry in the DB
 		await Game.create({
 			players: game.players,
+			feedback: content,
 			submissions: game.players.map(p => p.description),
 			code: game.code,
 			cleanliness: game.cleanliness,

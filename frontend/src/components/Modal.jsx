@@ -9,7 +9,7 @@ export default function Modal({ visible, onClose, title, children, icon }) {
         if (visible) {
             setShowModal(true); // Add to DOM
             // Trigger fade-in effect
-            setTimeout(() => setIsVisible(true), 1000); // Slight delay for fade-in animation
+            setTimeout(() => setIsVisible(true), 100); // Slight delay for fade-in animation
         } else {
             // Trigger fade-out effect
             setIsVisible(false);
