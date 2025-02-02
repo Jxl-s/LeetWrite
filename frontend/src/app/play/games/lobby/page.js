@@ -64,12 +64,14 @@ export default function Lobby() {
 						<span className="font-bold">{p.name}</span>
 						<span className="font-bold">({p.elo})</span>
 						{p.id == userId && (
-							<span className="font-bold text-green-400">
+							<span className="font-bold text-green-400 border border-green-400 rounded-md py-1 px-4">
 								You
 							</span>
 						)}
 						{p.id == myGame.host_id && (
-							<span className="font-bold text-red-400">Host</span>
+							<span className="font-bold text-blue-400 border border-blue-400 rounded-md py-1 px-4">
+								Host
+							</span>
 						)}
 						{myGame.host_id == userId && p.id != userId && (
 							<Button
