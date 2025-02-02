@@ -361,17 +361,13 @@ export async function submitDescription(gameId, playerId, description) {
 			player.eloDelta = deltaElos[i];
 
 			const userObj = await User.findOne({ id: player.id });
-			if (!userObj) {
-				await User.create({
-					id: player.id,
-					name: player.name,
-					photo: player.picture,
-					elo: player.elo,
-				});
-			} else {
-				userObj.elo = player.elo;
-				await userObj.save();
+			userObj.elo = player.elo;
+			userObj.matches += 1;
+			if (player.eloDelta > 0) {
+				userObj.wins += 1;
 			}
+
+			await userObj.save();
 		}
 
 		io?.emit(

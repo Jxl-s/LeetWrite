@@ -97,7 +97,7 @@ app.get(
 			{ expiresIn: "24h" },
 		);
 
-		let user = await User.findOne({ user_id: req.user.id });
+		let user = await User.findOne({ id: req.user.id });
 		if (!user) {
 			user = await User.create({
 				id: req.user.id.toString(),
@@ -288,6 +288,11 @@ app.get("/getElo", async (req, res) => {
 	}
 
 	res.json({ elo: user.elo });
+});
+
+app.get("/top", async (req, res) => {
+	const users = await User.find().sort({ elo: -1 });
+	res.json(users);
 });
 
 setAI(

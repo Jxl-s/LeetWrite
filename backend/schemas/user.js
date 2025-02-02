@@ -18,6 +18,16 @@ const userSchema = new mongoose.Schema({
 		required: true,
 		default: 1000,
 	},
+	wins: {
+		type: Number,
+		required: true,
+		default: 0,
+	},
+	matches: {
+		type: Number,
+		required: true,
+		default: 0,
+	},
 });
 
 const User = mongoose.model("User", userSchema);

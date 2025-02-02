@@ -95,6 +95,20 @@ export default function PlayLayout({ children }) {
 							Games
 						</Button>
 					</Link>
+					<Link href="/play/leaderboards" className="w-full px-5">
+						<Button
+							variant={
+								pathname === "/play/leaderboards"
+									? "primary"
+									: "secondary"
+							}
+							className="w-full flex gap-4 items-center font-bold h-10"
+						>
+							<TrophyIcon className="w-6 h-6" />
+							Leaderboards
+						</Button>
+					</Link>
+
 					<div className="grow"></div>
 					<div className="flex bg-800/50 mx-5 rounded-lg shadow-md p-2 gap-4 items-center">
 						{photo && (
