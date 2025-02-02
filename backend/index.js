@@ -21,6 +21,8 @@ import {
 	setAI,
 	setIO,
 	startGame,
+	submitDescription,
+	updateStatus,
 } from "./games/index.js";
 import bodyParser from "body-parser";
 
@@ -250,6 +252,29 @@ app.get("/startGame/:gameId", (req, res) => {
 
 	startGame(req.params.gameId, req.user.user_id);
 	res.json({ message: "Game started successfully" });
+});
+
+app.post("/updateStatus/:gameId", (req, res) => {
+	const token = req.headers.authorization.split(" ")[1];
+	const decoded = jwt.verify(token, process.env.JWT_SECRET);
+	req.user = decoded;
+
+	updateStatus(req.params.gameId, req.user.user_id, req.body.words);
+	res.json({ message: "Status updated successfully" });
+});
+
+app.post("/submit/:gameId", (req, res) => {
+	const token = req.headers.authorization.split(" ")[1];
+	const decoded = jwt.verify(token, process.env.JWT_SECRET);
+	req.user = decoded;
+
+	submitDescription(
+		req.params.gameId,
+		req.user.user_id,
+		req.body.description,
+	);
+
+	res.json({ message: "Description submitted successfully" });
 });
 
 setAI(

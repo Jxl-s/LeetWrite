@@ -14,6 +14,7 @@ import { redirect, usePathname, useRouter } from "next/navigation";
 import Link from "next/link";
 import { startWatcher } from "../../../stores/watcher";
 import useGameListStore from "../../../stores/gameListStore";
+import useGameStore from "../../../stores/gameStore";
 
 export default function PlayLayout({ children }) {
 	const setUser = useAuthStore(state => state.setUser);
@@ -41,9 +42,10 @@ export default function PlayLayout({ children }) {
 	const games = useGameListStore(state => state.games);
 	const userId = useAuthStore(state => state.user_id);
 	const setMyGameId = useGameListStore(state => state.setMyGameId);
+	const realGameId = useGameStore(state => state.id);
 
 	useEffect(() => {
-		if (games.length === 0) {
+		if (games.length === 0 && realGameId == -1) {
 			if (pathname == "/play/games/lobby") {
 				router.push("/play/games");
 			}
@@ -90,19 +92,6 @@ export default function PlayLayout({ children }) {
 						>
 							<PuzzlePieceIcon className="w-6 h-6" />
 							Games
-						</Button>
-					</Link>
-					<Link href="/play/leaderboards" className="w-full px-5">
-						<Button
-							variant={
-								pathname === "/play/leaderboards"
-									? "primary"
-									: "secondary"
-							}
-							className="w-full flex gap-4 items-center h-10"
-						>
-							<TrophyIcon className="w-6 h-6" />
-							Leaderboards
 						</Button>
 					</Link>
 					<div className="grow"></div>

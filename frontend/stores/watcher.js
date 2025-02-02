@@ -46,4 +46,45 @@ export async function startWatcher() {
 			useGameStore.getState().setLanguage(newGameData.language);
 		}
 	});
+
+	socket.on("gameUpdated", (gameId, newGameData) => {
+		const myGame = useGameStore.getState().id;
+		if (myGame == gameId) {
+			useGameStore.getState().setCleanliness(newGameData.cleanliness);
+			useGameStore.getState().setRarity(newGameData.rarity);
+			useGameStore.getState().setPlayers(newGameData.players);
+			useGameStore.getState().setCode(newGameData.code);
+			useGameStore.getState().setId(newGameData.id);
+			useGameStore.getState().setLanguage(newGameData.language);
+		}
+	});
+
+	socket.on("gameAllSubmitted", gameId => {
+		const myGame = useGameStore.getState().id;
+		if (myGame == gameId) {
+			useGameStore.getState().setIsJudging(true);
+		}
+	});
+
+	socket.on("gameJudgeResults", (gameId, results, descriptions) => {
+		const myGame = useGameStore.getState().id;
+		if (myGame == gameId) {
+			// map the results to a format
+			const realResults = results.map((r, i) => {
+				return {
+					id: useGameStore.getState().players[i].id,
+					picture: useGameStore.getState().players[i].picture,
+					name: useGameStore.getState().players[i].name,
+					correctness: r[0],
+					creativity: r[1],
+					clarity: r[2],
+					feedback: r[3],
+					description: descriptions[i],
+				};
+			});
+
+			useGameStore.getState().setIsJudging(false);
+			useGameStore.getState().setGameResults(realResults);
+		}
+	});
 }

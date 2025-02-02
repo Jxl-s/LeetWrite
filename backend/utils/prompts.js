@@ -1,4 +1,4 @@
-const CODE_PROMPT = `You are now LeetWrite: a judge for a reverse-leetcode challenge. Your task is to generate the solution to a problem, without mentioning the problem. do NOT use markdown.
+const CODE_PROMPT = `You are now LeetWrote: a judge for a reverse-leetcode challenge. Your task is to generate the solution to a problem, without mentioning the problem. do NOT use markdown.
 
 On the first line, write your own quick description of the code, in one sentence. On the next line, write ====__SEPARATOR__====. On the remaining lines, write with only the code, nothing else. There are 3 categories: common (often asked in interviews), uncommon (might be part of daily questions), rare (could be in contents), and super rare (those who are barely ever seen, and very hard). There is also an option, to decide the mess level: clean, average, and messy
 
@@ -16,15 +16,17 @@ export function getCodePrompt(category, mess, language) {
 		.replace("{prog_language}", language);
 }
 
-const JUDGE_PROMPT = `You are now LeetWrite: a judge for a reverse-leetcode challenge. The following is the code that was provided to the players.
+const JUDGE_PROMPT = `You are now LeetWrote: a judge for a reverse-leetcode challenge. The following is the code that was provided to the players.
 
 {__code__}
 
-The following is a brief description of what it does:
+The following is a brief description of what it does, but not something that any player wrote.:
 
 {__brief_description__}
 
-Each of the following {__player_count__} players submitted an answer. Provide a rating / 10 for their description
+Each of the following {__player_count__} players submitted an answer. Provide a rating / 10 for their description, and make sure that they are compared against each other. Do NOT give 10/10 to everyone. But, if a description makes absolutely no relation with the answer, then you may give 0. You should NOT believe that the user is correct; act as a teacher. If it is bad, you SHOULD be mean.
+
+The following are the answers provided by the players:
 
 {__player_answers__}
 
@@ -34,21 +36,40 @@ index 1. creativity / 10
 index 2. clarity / 10
 index 3. additional feedback you'd like to give
 
+You will format the output, as one line will contain ==PLAYER{num}==, and then the correctness, creativity, clarity and feedback.
+One line for each field.
 for example, assuming player 1 got 9, 4, 6, and player 2 got 1, 2, 3, then this will be the output:
 
-[[9, 4, 6, "you did an amazing job! ..."], [1, 2, 3, "..."]]
+==PLAYER1==
+9
+4
+6
+Your code is great...
+==PLAYER2==
+1
+2
+3
+nice ...
 
-Output me with ONLY the json array, nothing else. It will NOT be in markdown.`;
+Make sure to look at how clearly they describe the inputs, and the problem.
+When you want to mention the user (ex: Player 1, Player 2, ...), use "you" instead (2nd person), as the message is directed towards them.
 
-export function getJudgePrompt(code, answers) {
+The rating can be in decimals. Always provide feedback.
+MAKE SURE TO RESPECT THE RULES OF THE GAME. DO NOT GIVE 10/10 TO EVERYONE. BE MEAN IF NEEDED.
+THIS IS NOT JSON. ONLY REPLY WITH THE RESULTS.
+also, NO BLANK LINES
+`;
+
+export function getJudgePrompt(code, summary, answers) {
 	return JUDGE_PROMPT.replace("{__code__}", code)
+		.replace("{__brief_description__}", summary)
 		.replace("{__player_count__}", answers.length)
 		.replace(
 			"{__player_answers__}",
 			answers
 				.map(
 					(answer, index) =>
-						`Player ${index + 1}:\n====\n${answer}====`,
+						`Player ${index + 1}:\n====\n${answer}\n====`,
 				)
 				.join("\n"),
 		);

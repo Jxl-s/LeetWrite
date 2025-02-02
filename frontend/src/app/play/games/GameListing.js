@@ -20,7 +20,6 @@ export default function GameListing({ id }) {
 		});
 	}
 
-	console.log(thisGame);
 	return (
 		<div className="flex flex-col gap-1">
 			<header className="flex justify-between">

@@ -30,9 +30,9 @@ export default function Lobby() {
 
 	return (
 		<div>
-			<h1 className="text-4xl font-bold">Lobby #{myGameId}</h1>
+			<h1 className="text-4xl font-bold">Lobby</h1>
 			<p className="text-white/50">
-				These are the players you will be competing against.
+				These are the players you will be playing against
 			</p>
 			<div
 				className={

@@ -16,6 +16,7 @@ import useAuthStore from "../../../../stores/authStore";
 import { useEffect } from "react";
 import { redirect } from "next/navigation";
 import useCreateGameStore from "../../../../stores/createGameStore";
+import { messColors, frequencyColors } from "@/utils/colors";
 export default function Games() {
 	const games = useGameListStore(state => state.games);
 
@@ -89,7 +90,10 @@ export default function Games() {
 							Problem Rarity
 						</span>
 						<select
-							className="w-full bg-neutral-800 py-2 ps-3 rounded-md shadow-md font-bold text-sm mt-1 h-10"
+							className={
+								"w-full bg-neutral-800 py-2 ps-3 rounded-md shadow-md font-bold text-sm mt-1 h-10 " +
+								frequencyColors[rarity]
+							}
 							value={rarity}
 							onChange={e => setRarity(e.target.value)}
 						>
@@ -105,7 +109,10 @@ export default function Games() {
 							Code Cleanliness
 						</span>
 						<select
-							className="w-full bg-neutral-800 py-2 ps-3 rounded-md shadow-md font-bold text-sm mt-1 h-10"
+							className={
+								"w-full bg-neutral-800 py-2 ps-3 rounded-md shadow-md font-bold text-sm mt-1 h-10 " +
+								messColors[cleanliness]
+							}
 							value={cleanliness}
 							onChange={e => setCleanliness(e.target.value)}
 						>

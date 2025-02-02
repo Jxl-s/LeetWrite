@@ -13,6 +13,12 @@ const useGameStore = create(set => ({
 	setPlayers: players => set({ players }),
 	language: "Python",
 	setLanguage: language => set({ language }),
+	duration: 5,
+	setDuration: duration => set({ duration }),
+	isJudging: false,
+	setIsJudging: isJudging => set({ isJudging }),
+	gameResults: [],
+	setGameResults: gameResults => set({ gameResults }),
 }));
 
 export default useGameStore;
