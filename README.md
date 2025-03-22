@@ -7,6 +7,8 @@ LeetWrite won **2nd place out of 800+ participants** at **ConUHacks IX**, Québe
 
 It was built in just **24 hours** as a **solo project**! 🎉  The Devpost can be found here: https://devpost.com/software/leetwrite
 
+p.s. As of 22th March 2025, I am currently working on making this production-ready project!!
+
 ---
 
 ## 🚀 Inspiration  
