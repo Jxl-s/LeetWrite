@@ -39,14 +39,12 @@ const io = new Server(server, {
 	},
 });
 
-// Replace these with your actual Google OAuth credentials
 const GOOGLE_CLIENT_ID = process.env.GOOGLE_CLIENT_ID;
 const GOOGLE_CLIENT_SECRET = process.env.GOOGLE_CLIENT_SECRET;
 
-// Set up session middleware
 app.use(
 	session({
-		secret: "your_secret_key",
+		secret: process.env.SESSION_SECRET,
 		resave: false,
 		saveUninitialized: true,
 	}),
@@ -77,6 +75,23 @@ passport.use(
 		},
 	),
 );
+
+const verifyToken = (req, res, next) => {
+	if (!req.headers.authorization) {
+		return res
+			.status(401)
+			.json({ message: "Authorization header required" });
+	}
+
+	try {
+		const token = req.headers.authorization.split(" ")[1];
+		const decoded = jwt.verify(token, process.env.JWT_SECRET);
+		req.user = decoded;
+		next();
+	} catch (error) {
+		return res.status(401).json({ message: "Invalid or expired token" });
+	}
+};
 
 // Google OAuth routes
 app.get(
@@ -152,11 +167,7 @@ app.get("/openGames", (req, res) => {
 	res.json(openGames);
 });
 
-app.get("/joinGame/:gameId", async (req, res) => {
-	const token = req.headers.authorization.split(" ")[1];
-	const decoded = jwt.verify(token, process.env.JWT_SECRET);
-	req.user = decoded;
-
+app.get("/joinGame/:gameId", verifyToken, async (req, res) => {
 	console.log(req.user, "is the user");
 	const gameId = req.params.gameId;
 	const game = openGames.find(game => game.id == gameId);
@@ -179,11 +190,7 @@ app.get("/joinGame/:gameId", async (req, res) => {
 	res.json({ message: "Joined game successfully" });
 });
 
-app.get("/leaveGame/:gameId", (req, res) => {
-	const token = req.headers.authorization.split(" ")[1];
-	const decoded = jwt.verify(token, process.env.JWT_SECRET);
-	req.user = decoded;
-
+app.get("/leaveGame/:gameId", verifyToken, (req, res) => {
 	const gameId = req.params.gameId;
 	const game = openGames.find(game => game.id == gameId);
 	if (!game) {
@@ -204,11 +211,7 @@ app.get("/leaveGame/:gameId", (req, res) => {
 	io.emit("openGamesUpdated", openGames);
 });
 
-app.post("/createGame", async (req, res) => {
-	const token = req.headers.authorization.split(" ")[1];
-	const decoded = jwt.verify(token, process.env.JWT_SECRET);
-	req.user = decoded;
-
+app.post("/createGame", verifyToken, async (req, res) => {
 	const { rarity, cleanliness, playerLimit, language } = req.body;
 	const user = await User.findOne({ id: req.user.user_id });
 	if (!user) {
@@ -230,11 +233,7 @@ app.post("/createGame", async (req, res) => {
 	res.json({ message: "Game created successfully" });
 });
 
-app.get("/kickPlayer/:gameId/:playerId", async (req, res) => {
-	const token = req.headers.authorization.split(" ")[1];
-	const decoded = jwt.verify(token, process.env.JWT_SECRET);
-	req.user = decoded;
-
+app.get("/kickPlayer/:gameId/:playerId", verifyToken, async (req, res) => {
 	const gameId = req.params.gameId;
 	const playerId = req.params.playerId;
 	kickPlayer(gameId, req.user.user_id, playerId);
@@ -242,48 +241,30 @@ app.get("/kickPlayer/:gameId/:playerId", async (req, res) => {
 	res.json({ message: "Player kicked successfully" });
 });
 
-app.get("/startGame/:gameId", (req, res) => {
-	const token = req.headers.authorization.split(" ")[1];
-	const decoded = jwt.verify(token, process.env.JWT_SECRET);
-	req.user = decoded;
-
+app.get("/startGame/:gameId", verifyToken, (req, res) => {
 	startGame(req.params.gameId, req.user.user_id);
 	res.json({ message: "Game started successfully" });
 });
 
-app.post("/updateStatus/:gameId", (req, res) => {
-	const token = req.headers.authorization.split(" ")[1];
-	const decoded = jwt.verify(token, process.env.JWT_SECRET);
-	req.user = decoded;
-
+app.post("/updateStatus/:gameId", verifyToken, (req, res) => {
 	updateStatus(req.params.gameId, req.user.user_id, req.body.words);
 	res.json({ message: "Status updated successfully" });
 });
 
-app.post("/submit/:gameId", (req, res) => {
-	const token = req.headers.authorization.split(" ")[1];
-	const decoded = jwt.verify(token, process.env.JWT_SECRET);
-	req.user = decoded;
-
+app.post("/submit/:gameId", verifyToken, (req, res) => {
 	submitDescription(
 		req.params.gameId,
 		req.user.user_id,
 		req.body.description,
 	);
-
 	res.json({ message: "Description submitted successfully" });
 });
 
-app.get("/getElo", async (req, res) => {
-	const token = req.headers.authorization.split(" ")[1];
-	const decoded = jwt.verify(token, process.env.JWT_SECRET);
-	req.user = decoded;
-
+app.get("/getElo", verifyToken, async (req, res) => {
 	const user = await User.findOne({ id: req.user.user_id });
 	if (!user) {
 		return res.status(400).json({ message: "User not found" });
 	}
-
 	res.json({ elo: user.elo });
 });
 

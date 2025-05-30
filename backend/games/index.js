@@ -135,32 +135,32 @@ export function kickPlayer(gameId, kickerId, playerId) {
 }
 
 export const currentGames = [
-	{
-		id: 1,
-		code: 'def main():\tprint("hello world")',
-		rarity: "Common",
-		cleanliness: "Messy",
-		language: "Python",
-		summary: "this prints hello world",
-		players: [
-			{
-				id: "123123123",
-				name: "Mr Skibidi",
-				words: 1021,
-				picture: "",
-				status: "Writing",
-				description: "",
-			},
-			{
-				id: "123123124",
-				name: "Mr Skibidi",
-				picture: "",
-				words: 1021,
-				status: "Writing",
-				description: "",
-			},
-		],
-	},
+	//{
+	//	id: 1,
+	//	code: 'def main():\tprint("hello world")',
+	//	rarity: "Common",
+	//	cleanliness: "Messy",
+	//	language: "Python",
+	//	summary: "this prints hello world",
+	//	players: [
+	//		{
+	//			id: "123123123",
+	//			name: "Mr Skibidi",
+	//			words: 1021,
+	//			picture: "",
+	//			status: "Writing",
+	//			description: "",
+	//		},
+	//		{
+	//			id: "123123124",
+	//			name: "Mr Skibidi",
+	//			picture: "",
+	//			words: 1021,
+	//			status: "Writing",
+	//			description: "",
+	//		},
+	//	],
+	//},
 ];
 
 function filterGame(data) {
