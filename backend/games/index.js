@@ -96,7 +96,7 @@ export function createGame({
 	cleanliness,
 	capacity,
 }) {
-	const id = openGames.length + 1;
+	const id = Math.floor(Math.random() * 100_000_000);
 	addGame({
 		open: true,
 		host,
@@ -222,7 +222,7 @@ export async function startGame(gameId, starterPlayerId) {
 
 			// add the game to the current games
 			const newGame = {
-				id: currentGames.length + 1,
+				id: Math.floor(Math.random() * 100_000_000),
 				code: code.trim(),
 				rarity: game.rarity,
 				cleanliness: game.cleanliness,
@@ -252,7 +252,8 @@ export async function startGame(gameId, starterPlayerId) {
 	//io?.emit("openGamesUpdated", openGames);
 }
 
-const lastUpdate = Date.now();
+const lastUpdateMap = new Map();
+
 export function updateStatus(gameId, playerId, wordCount) {
 	const game = currentGames.find(game => game.id == gameId);
 	if (!game) return false;
@@ -262,7 +263,12 @@ export function updateStatus(gameId, playerId, wordCount) {
 
 	player.words = wordCount;
 
-	if (Date.now() - lastUpdate < 1000) return;
+	const now = Date.now();
+	const lastUpdate = lastUpdateMap.get(gameId) || 0;
+
+	if (now - lastUpdate < 1000) return;
+	lastUpdateMap.set(gameId, now);
+
 	io?.emit("gameUpdated", gameId, filterGame(game));
 }
 
