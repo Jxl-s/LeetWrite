@@ -1,10 +1,10 @@
 # LeetWrite
 
-**2nd place** out of **800+ participants** and **180+ projects** at ConUHacks IX, built **solo** in 24 hours! 🏆
+**2nd place** out of **800+ participants** and **180+ projects** at ConUHacks IX (largest hackathon in Quebec), built **solo** in 24 hours! 🏆
 
-https://github.com/user-attachments/assets/902ee683-4646-4220-976e-1df35d244e9e
+View the DevPost here: https://devpost.com/software/leetwrite
 
-DevPost: https://devpost.com/software/leetwrite
+https://github.com/user-attachments/assets/733463f7-c49b-4ada-b7ff-42e4ce8a3d65
 
 ---
 
